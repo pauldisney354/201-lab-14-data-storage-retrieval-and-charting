@@ -1,39 +1,38 @@
 function renderChart() {
-  // Step 1: Instantiate a new AppState
   const appState = new AppState();
-
-  // Step 2: Load data from localStorage into the AppState instance
   appState.loadItems();
 
-  // Step 3: Prepare the chart data object
+  if (!appState.allProducts || appState.allProducts.length === 0) {
+    console.error('No product data available for rendering the chart.');
+    return;
+  }
+
   const productNames = appState.allProducts.map(product => product.name);
   const productClicks = appState.allProducts.map(product => product.timesClicked);
   const productViews = appState.allProducts.map(product => product.timesShown);
 
-  // Step 4: Configure the chart data and options
   const chartData = {
-    labels: productNames,  // Names of the products as chart labels
+    labels: productNames,
     datasets: [
       {
-        label: 'Times Clicked',  // First dataset (Clicks)
+        label: 'Times Clicked',
         data: productClicks,
-        backgroundColor: 'rgba(54, 162, 235, 0.2)',  // Light Blue color for clicks
-        borderColor: 'rgba(54, 162, 235, 1)',  // Dark Blue border for clicks
+        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+        borderColor: 'rgba(54, 162, 235, 1)',
         borderWidth: 1
       },
       {
-        label: 'Times Shown',  // Second dataset (Views)
+        label: 'Times Shown',
         data: productViews,
-        backgroundColor: 'rgba(255, 99, 132, 0.2)',  // Light Red color for views
-        borderColor: 'rgba(255, 99, 132, 1)',  // Dark Red border for views
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        borderColor: 'rgba(255, 99, 132, 1)',
         borderWidth: 1
       }
     ]
   };
 
-  // Step 5: Chart.js configuration object
   const chartConfig = {
-    type: 'bar',  // You can change this to 'line', 'pie', etc., depending on your preference
+    type: 'bar',
     data: chartData,
     options: {
       responsive: true,
@@ -44,7 +43,7 @@ function renderChart() {
         tooltip: {
           callbacks: {
             label: function(tooltipItem) {
-              return `${tooltipItem.dataset.label}: ${tooltipItem.raw}`;  // Custom tooltip formatting
+              return `${tooltipItem.dataset.label}: ${tooltipItem.raw}`;
             }
           }
         }
@@ -60,7 +59,7 @@ function renderChart() {
     }
   };
 
-  // Step 6: Create the chart using Chart.js
+  const canvasElem = document.getElementById('chart');
   new Chart(canvasElem, chartConfig);
 }
 
